@@ -1,25 +1,54 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 
+import {
+  Link,
+  Route,
+  Switch,
+  BrowserRouter,
+} from "react-router-dom";
+
+import {
+  UserPage,
+  HomePage,
+  AboutPage,
+} from 'pages';
+
+import { hide } from 'actions';
 import Modal from 'components/Modal';
 
-function App() {
-
-  const [show, setShow] = useState(false);
-
+function App({ isShow, hide, msg }) {
   return (
     <div className="App">
-      <button onClick={setShow.bind(this, true)}>
-        show modal
-      </button>
-      {show && (
-        <Modal onClose={setShow.bind(this, false)}>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Adipisci similique excepturi dolorum! Temporibus voluptatem ut asperiores ipsam, ea blanditiis odio aspernatur in quae debitis aliquam! Laboriosam quidem nihil fugiat delectus?
-          Dolor, ducimus? Adipisci omnis beatae officiis quis quasi eveniet voluptate, odio tempora, impedit nesciunt ducimus magni neque suscipit aliquam in at autem eum modi, eligendi sunt saepe optio. Repellendus, ipsa?
-          Sit molestiae illo eaque est? Sapiente dolores rerum voluptatibus porro quasi debitis, eligendi cum, laudantium laboriosam et quas consequatur molestias aut optio provident error, explicabo exercitationem aliquid architecto dolorum quia?
+      <BrowserRouter>
+        <ul>
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="about">About</Link></li>
+          <li><Link to="user">User</Link></li>
+        </ul>
+        <Switch>
+          <Route path="/about"><AboutPage /></Route>
+          <Route path="/user"><UserPage /></Route>
+          <Route path="/"><HomePage /></Route>
+        </Switch>
+      </BrowserRouter>
+      { isShow && (
+        <Modal onClose={hide}>
+          {msg}
         </Modal>
       )}
     </div>
   );
 }
 
-export default App;
+
+const mapStateToProps = state => state
+
+const mapDispatchToProps = dispatch => ({
+  hide: () => dispatch(hide()),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
