@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 
 import { show, hide } from 'actions';
@@ -7,6 +7,21 @@ import ModalContent from './ModalContent';
 import style from './style.module.scss';
 
 function _HomePage(props) {
+
+  const prevIsShowRef = useRef();
+
+  useEffect(() => {
+    prevIsShowRef.current = props.isShow;
+  });
+
+  const prevCount = prevIsShowRef.current;
+
+  useEffect(() => {
+    if(prevCount && prevCount !== props.isShow && !props.isShow) {
+        alert('已關閉 modal');
+    }
+  }, [prevCount, props.isShow])
+
   return (
     <div className={style.HomePage}>
       HomePage
@@ -22,7 +37,7 @@ function _HomePage(props) {
   )
 }
 
-const mapStateToProps = null;
+const mapStateToProps = state => state;
 
 const mapDispatchToProps = dispatch => ({
   hide: () => dispatch(hide()),
